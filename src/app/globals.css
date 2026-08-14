@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --color-cream: #f6f2e8;
+  --color-ink: #1c2117;
+  --color-moss: #3f5b3a;
+  --color-moss-dark: #2b4027;
+  --color-amber: #c98a2b;
+  --color-clay: #a54f35;
+  --color-sky: #4c7a8c;
+  --color-card: #fffdf7;
+}
+
+@theme inline {
+  --color-cream: var(--color-cream);
+  --color-ink: var(--color-ink);
+  --color-moss: var(--color-moss);
+  --color-moss-dark: var(--color-moss-dark);
+  --color-amber: var(--color-amber);
+  --color-clay: var(--color-clay);
+  --color-sky: var(--color-sky);
+  --color-card: var(--color-card);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-data: var(--font-data);
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+}
+
+.font-data {
+  font-family: var(--font-data), monospace;
+}
+
+/* Furrow-row texture used behind the hero + section dividers */
+.furrows {
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(28, 33, 23, 0.05) 0px,
+    rgba(28, 33, 23, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.breed-tag {
+  font-family: var(--font-data), monospace;
+  letter-spacing: 0.02em;
+}
