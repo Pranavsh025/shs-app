@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { query } from "@/lib/db";
+import { getLang } from "@/lib/lang-server";
+import { t } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function MarketPage() {
+  const lang = await getLang();
+
   const rows = await query<{
     breed_id: string;
     name: string;
@@ -21,24 +25,21 @@ export default async function MarketPage() {
   return (
     <div className="max-w-5xl mx-auto px-5 py-14">
       <p className="breed-tag text-xs uppercase tracking-widest text-clay mb-2">
-        Market
+        {t(lang, "market.tag")}
       </p>
-      <h1 className="font-display text-3xl mb-2">Subsidy vs. open market</h1>
-      <p className="text-ink/60 max-w-2xl mb-10">
-        Government subsidy price against open market price for every breed
-        that has pricing on file, plus import/export reference numbers.
-      </p>
+      <h1 className="font-display text-3xl mb-2">{t(lang, "market.title")}</h1>
+      <p className="text-ink/60 max-w-2xl mb-10">{t(lang, "market.subtitle")}</p>
 
       <div className="overflow-x-auto rounded-2xl border border-ink/10">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-moss/10 text-left text-ink/60 breed-tag text-xs uppercase">
-              <th className="px-4 py-3">Breed</th>
-              <th className="px-4 py-3">Subsidy price</th>
-              <th className="px-4 py-3">Open market</th>
-              <th className="px-4 py-3">Difference</th>
-              <th className="px-4 py-3">Import ref.</th>
-              <th className="px-4 py-3">Export ref.</th>
+              <th className="px-4 py-3">{t(lang, "market.breed")}</th>
+              <th className="px-4 py-3">{t(lang, "market.subsidyPrice")}</th>
+              <th className="px-4 py-3">{t(lang, "market.openMarket")}</th>
+              <th className="px-4 py-3">{t(lang, "market.difference")}</th>
+              <th className="px-4 py-3">{t(lang, "market.importRef")}</th>
+              <th className="px-4 py-3">{t(lang, "market.exportRef")}</th>
             </tr>
           </thead>
           <tbody>

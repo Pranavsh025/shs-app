@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { query } from "@/lib/db";
+import { getLang } from "@/lib/lang-server";
+import { t } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function CropsPage() {
+  const lang = await getLang();
+
   const rows = await query<{
     climate_zone: string;
     annual_rainfall: string;
@@ -30,13 +34,10 @@ export default async function CropsPage() {
   return (
     <div className="max-w-6xl mx-auto px-5 py-14">
       <p className="breed-tag text-xs uppercase tracking-widest text-clay mb-2">
-        Crops &amp; climate
+        {t(lang, "crops.tag")}
       </p>
-      <h1 className="font-display text-3xl mb-2">Which breed grows where</h1>
-      <p className="text-ink/60 max-w-2xl mb-10">
-        Pick a climate zone to see the breeds it supports, then open a breed
-        for its fertilizer cost, herbicide cost, and market pricing.
-      </p>
+      <h1 className="font-display text-3xl mb-2">{t(lang, "crops.title")}</h1>
+      <p className="text-ink/60 max-w-2xl mb-10">{t(lang, "crops.subtitle")}</p>
 
       <div className="space-y-10">
         {[...byZone.entries()].map(([zone, breeds]) => (
@@ -46,8 +47,8 @@ export default async function CropsPage() {
                 {zone.replace("_", " ")}
               </h2>
               <span className="text-xs text-ink/50 breed-tag">
-                {Number(breeds[0].annual_rainfall).toFixed(1)} in rainfall ·{" "}
-                {breeds[0].soil_cond} soil · sea level {breeds[0].sea_level}
+                {Number(breeds[0].annual_rainfall).toFixed(1)} {t(lang, "crops.rainfall")} ·{" "}
+                {breeds[0].soil_cond} {t(lang, "crops.soil")} · {t(lang, "crops.seaLevel")} {breeds[0].sea_level}
               </span>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

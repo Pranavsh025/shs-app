@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { query } from "@/lib/db";
+import { getLang } from "@/lib/lang-server";
+import { t } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const lang = await getLang();
+
   const [climateCount, breedCount, farmerCount] = await Promise.all([
     query<{ count: string }>("SELECT COUNT(*) FROM climate"),
     query<{ count: string }>("SELECT COUNT(*) FROM crops_vegetable"),
@@ -28,49 +32,40 @@ export default async function Home() {
     <div>
       <section className="furrows border-b border-ink/10">
         <div className="max-w-6xl mx-auto px-5 py-20 md:py-28">
-          <p className="breed-tag text-xs uppercase tracking-widest text-clay mb-4">
-            Field-tested for UCS310 · rebuilt as a live app
-          </p>
           <h1 className="font-display text-4xl md:text-6xl leading-[1.05] text-ink max-w-3xl">
-            Match every field to its <em className="italic text-moss">climate</em>,
-            not the other way around.
+            {t(lang, "home.titlePre")}{" "}
+            <em className="italic text-moss">{t(lang, "home.titleEm")}</em>
+            {t(lang, "home.titlePost")}
           </h1>
           <p className="mt-6 max-w-xl text-ink/70 text-lg font-body">
-            Sustainable Harvest Solutions maps rainfall, soil and sea level to the
-            crop breeds that actually thrive there — then prices out the
-            fertilizer, herbicide, and government-vs-open-market numbers for
-            each one.
+            {t(lang, "home.subtitle")}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/crops"
               className="rounded-full bg-moss text-cream px-6 py-3 font-medium hover:bg-moss-dark transition-colors"
             >
-              Browse climate zones
+              {t(lang, "home.browseZones")}
             </Link>
             <Link
               href="/login"
               className="rounded-full border border-ink/20 px-6 py-3 font-medium hover:border-moss hover:text-moss transition-colors"
             >
-              Farmer log in
+              {t(lang, "home.farmerLogin")}
             </Link>
           </div>
 
           <div className="mt-14 grid grid-cols-3 max-w-md gap-6 breed-tag">
-            <Stat value={climateCount[0]?.count} label="climate zones" />
-            <Stat value={breedCount[0]?.count} label="crop breeds" />
-            <Stat value={farmerCount[0]?.count} label="registered farmers" />
+            <Stat value={climateCount[0]?.count} label={t(lang, "home.statClimateZones")} />
+            <Stat value={breedCount[0]?.count} label={t(lang, "home.statCropBreeds")} />
+            <Stat value={farmerCount[0]?.count} label={t(lang, "home.statFarmers")} />
           </div>
         </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-5 py-16">
-        <h2 className="font-display text-2xl text-ink mb-2">Climate zones on file</h2>
-        <p className="text-ink/60 mb-8 max-w-2xl">
-          Each zone carries its own rainfall, soil condition and sea level — the
-          three inputs the original ER model uses to decide which breeds belong
-          where.
-        </p>
+        <h2 className="font-display text-2xl text-ink mb-2">{t(lang, "home.zonesHeading")}</h2>
+        <p className="text-ink/60 mb-8 max-w-2xl">{t(lang, "home.zonesSubheading")}</p>
         <div className="grid sm:grid-cols-2 gap-5">
           {zones.map((z) => (
             <div
@@ -86,7 +81,7 @@ export default async function Home() {
                 </span>
               </div>
               <p className="text-sm text-ink/60 mt-1">
-                {Number(z.annual_rainfall).toFixed(1)} in. annual rainfall
+                {Number(z.annual_rainfall).toFixed(1)} {t(lang, "home.rainfall")}
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {z.breeds.split(", ").map((b) => (

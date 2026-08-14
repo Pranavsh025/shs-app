@@ -26,11 +26,26 @@ CREATE TABLE IF NOT EXISTS login (
 CREATE TABLE IF NOT EXISTS user_farmer (
   user_id          VARCHAR(45) PRIMARY KEY REFERENCES login(user_id) ON DELETE CASCADE,
   name             VARCHAR(200) NOT NULL,
+  email            VARCHAR(255) UNIQUE,
   phone_no         VARCHAR(20)  NOT NULL,
   region           VARCHAR(200) NOT NULL,
   residence        VARCHAR(500) NOT NULL,
   plantation_land  NUMERIC(9,4) NOT NULL,
   type_of_farming  VARCHAR(45)  NOT NULL
+);
+
+-- If this schema was applied before the `email` column existed, add it
+-- non-destructively (safe to run repeatedly).
+ALTER TABLE user_farmer ADD COLUMN IF NOT EXISTS email VARCHAR(255) UNIQUE;
+
+-- Short-lived email OTPs used by the self-service registration flow
+-- (see /api/register/send-otp and /api/register).
+CREATE TABLE IF NOT EXISTS otp_verifications (
+  email        VARCHAR(255) PRIMARY KEY,
+  otp_code     VARCHAR(6)   NOT NULL,
+  expires_at   TIMESTAMPTZ  NOT NULL,
+  attempts     INT          NOT NULL DEFAULT 0,
+  created_at   TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 -- 3) climate

@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function LogoutButton() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { t } = useLanguage();
 
   return (
     <button
@@ -19,7 +21,7 @@ export default function LogoutButton() {
       disabled={pending}
       className="text-ink/70 hover:text-clay transition-colors disabled:opacity-50"
     >
-      {pending ? "Logging out…" : "Log out"}
+      {pending ? t("nav.loggingOut") : t("nav.logout")}
     </button>
   );
 }

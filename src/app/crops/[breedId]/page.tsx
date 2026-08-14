@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { query } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { getLang } from "@/lib/lang-server";
+import { t } from "@/lib/i18n";
 import MarketUpdateForm from "@/components/MarketUpdateForm";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +14,7 @@ export default async function BreedPage({
 }) {
   const { breedId } = await params;
   const session = await getSession();
+  const lang = await getLang();
 
   const breedRows = await query<{ breed_id: string; season: string; name: string }>(
     "SELECT breed_id, season, name FROM crops_vegetable WHERE breed_id = $1",
@@ -82,21 +85,21 @@ export default async function BreedPage({
       </div>
       <h1 className="font-display text-4xl mb-2">{breed.name}</h1>
       <p className="text-ink/60 mb-10">
-        Grown in:{" "}
+        {t(lang, "breed.grownIn")}{" "}
         {climateZones.map((c) => c.climate_zone.replace("_", " ")).join(", ") ||
-          "no climate zone on file"}
+          t(lang, "breed.noClimateZone")}
       </p>
 
       <div className="grid md:grid-cols-2 gap-6 mb-10">
         <section className="rounded-2xl bg-card border border-ink/10 p-6">
           <div className="flex items-baseline justify-between mb-4">
-            <h2 className="font-display text-xl text-moss-dark">Fertilizers</h2>
+            <h2 className="font-display text-xl text-moss-dark">{t(lang, "breed.fertilizers")}</h2>
             <span className="breed-tag text-sm text-clay">
-              ₹{Number(fertCostRows[0]?.get_total_fertilizer_cost ?? 0).toLocaleString()} total
+              ₹{Number(fertCostRows[0]?.get_total_fertilizer_cost ?? 0).toLocaleString()} {t(lang, "breed.total")}
             </span>
           </div>
           {fertilizers.length === 0 ? (
-            <p className="text-sm text-ink/50">No fertilizers on file for this breed.</p>
+            <p className="text-sm text-ink/50">{t(lang, "breed.noFertilizers")}</p>
           ) : (
             <ul className="space-y-2 text-sm">
               {fertilizers.map((f, i) => (
@@ -116,13 +119,13 @@ export default async function BreedPage({
 
         <section className="rounded-2xl bg-card border border-ink/10 p-6">
           <div className="flex items-baseline justify-between mb-4">
-            <h2 className="font-display text-xl text-moss-dark">Herbicides</h2>
+            <h2 className="font-display text-xl text-moss-dark">{t(lang, "breed.herbicides")}</h2>
             <span className="breed-tag text-sm text-clay">
-              ₹{Number(herbCostRows[0]?.get_total_herbicide_cost ?? 0).toLocaleString()} total
+              ₹{Number(herbCostRows[0]?.get_total_herbicide_cost ?? 0).toLocaleString()} {t(lang, "breed.total")}
             </span>
           </div>
           {herbicides.length === 0 ? (
-            <p className="text-sm text-ink/50">No herbicides on file for this breed.</p>
+            <p className="text-sm text-ink/50">{t(lang, "breed.noHerbicides")}</p>
           ) : (
             <ul className="space-y-2 text-sm">
               {herbicides.map((h) => (
@@ -132,7 +135,7 @@ export default async function BreedPage({
                     <span className="breed-tag">₹{Number(h.price).toLocaleString()}</span>
                   </div>
                   {h.herbs && (
-                    <p className="text-xs text-ink/40 mt-0.5">targets: {h.herbs}</p>
+                    <p className="text-xs text-ink/40 mt-0.5">{t(lang, "breed.targets")} {h.herbs}</p>
                   )}
                 </li>
               ))}
@@ -142,26 +145,26 @@ export default async function BreedPage({
       </div>
 
       <section className="rounded-2xl bg-card border border-ink/10 p-6 mb-10">
-        <h2 className="font-display text-xl text-moss-dark mb-4">Market pricing</h2>
+        <h2 className="font-display text-xl text-moss-dark mb-4">{t(lang, "breed.marketPricing")}</h2>
         {market ? (
           <div className="grid sm:grid-cols-3 gap-6 breed-tag text-sm">
             <div>
-              <p className="text-ink/50 text-xs mb-1">Govt. subsidy price</p>
+              <p className="text-ink/50 text-xs mb-1">{t(lang, "breed.govtSubsidyPrice")}</p>
               <p className="text-lg">₹{Number(market.govt_sub_price).toFixed(2)}</p>
             </div>
             <div>
-              <p className="text-ink/50 text-xs mb-1">Open market price</p>
+              <p className="text-ink/50 text-xs mb-1">{t(lang, "breed.openMarketPrice")}</p>
               <p className="text-lg">₹{Number(market.open_market_price).toFixed(2)}</p>
             </div>
             <div>
-              <p className="text-ink/50 text-xs mb-1">Price difference</p>
+              <p className="text-ink/50 text-xs mb-1">{t(lang, "breed.priceDifference")}</p>
               <p className={`text-lg ${Number(marketDiff) >= 0 ? "text-moss" : "text-clay"}`}>
                 {marketDiff != null ? `₹${Number(marketDiff).toFixed(2)}` : "—"}
               </p>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-ink/50">No market data on file for this breed yet.</p>
+          <p className="text-sm text-ink/50">{t(lang, "breed.noMarketData")}</p>
         )}
 
         {session && (

@@ -23,9 +23,9 @@ async function run() {
 
     // --- login + user_farmer -------------------------------------------
     const farmers = [
-      { id: "1", name: "Bikram", password: "bikram123", phone: "9479494341", region: "Japan", residence: "Fertt", land: 45.0, farming: "organic" },
-      { id: "2", name: "Vishal", password: "vishal123", phone: "8989897890", region: "Jabalpur", residence: "Jodhpur", land: 456.0, farming: "wetland" },
-      { id: "3", name: "Aaditya", password: "aaditya123", phone: "8989894407", region: "Chennai", residence: "Jabalpur", land: 500.0, farming: "step" },
+      { id: "1", name: "Bikram", email: "bikram@example.com", password: "bikram123", phone: "9479494341", region: "Japan", residence: "Fertt", land: 45.0, farming: "organic" },
+      { id: "2", name: "Vishal", email: "vishal@example.com", password: "vishal123", phone: "8989897890", region: "Jabalpur", residence: "Jodhpur", land: 456.0, farming: "wetland" },
+      { id: "3", name: "Aaditya", email: "aaditya@example.com", password: "aaditya123", phone: "8989894407", region: "Chennai", residence: "Jabalpur", land: 500.0, farming: "step" },
     ];
 
     for (const f of farmers) {
@@ -36,13 +36,13 @@ async function run() {
         [f.id, hash]
       );
       await client.query(
-        `INSERT INTO user_farmer (user_id, name, phone_no, region, residence, plantation_land, type_of_farming)
-         VALUES ($1,$2,$3,$4,$5,$6,$7)
+        `INSERT INTO user_farmer (user_id, name, email, phone_no, region, residence, plantation_land, type_of_farming)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
          ON CONFLICT (user_id) DO UPDATE SET
-           name = EXCLUDED.name, phone_no = EXCLUDED.phone_no, region = EXCLUDED.region,
+           name = EXCLUDED.name, email = EXCLUDED.email, phone_no = EXCLUDED.phone_no, region = EXCLUDED.region,
            residence = EXCLUDED.residence, plantation_land = EXCLUDED.plantation_land,
            type_of_farming = EXCLUDED.type_of_farming`,
-        [f.id, f.name, f.phone, f.region, f.residence, f.land, f.farming]
+        [f.id, f.name, f.email, f.phone, f.region, f.residence, f.land, f.farming]
       );
     }
 

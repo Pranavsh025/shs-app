@@ -10,6 +10,14 @@ Vercel.
 
 - **Auth** — farmers log in against the `login` table (bcrypt-hashed
   passwords), session stored in a signed HTTP-only cookie.
+- **Self-service registration with email OTP** — new farmers create their
+  own account at `/register`. The flow is: enter email → we email a 6-digit
+  code → enter the code → fill in the rest of the profile → account is
+  created. See "Email / OTP setup" below for the required env vars.
+- **English / Hindi UI toggle** — an EN / हिं switch in the navbar lets each
+  visitor pick their interface language; the choice is remembered in a
+  cookie. Static page text is translated; farmer-entered and seeded data
+  (crop names, regions, etc.) is shown as stored.
 - **Dashboard** — pulls the logged-in farmer's profile from `user_farmer`.
 - **Crops & Climate** — browse climate zones and the crop breeds mapped to
   each one (`climate`, `crops_climate`, `crops_vegetable`).
@@ -27,13 +35,35 @@ Vercel.
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in DATABASE_URL + SESSION_SECRET
+cp .env.example .env.local   # fill in DATABASE_URL + SESSION_SECRET + SMTP_*
 npm run db:migrate           # applies db/schema.sql
 npm run db:seed              # loads sample data (see db/seed.mjs)
 npm run dev
 ```
 
 Demo logins after seeding: `1 / bikram123`, `2 / vishal123`, `3 / aaditya123`.
+New accounts can also be created directly from the app at `/register`
+(requires SMTP env vars to be set — see below).
+
+## Email / OTP setup
+
+Registration emails a one-time 6-digit code before an account is created.
+This needs SMTP credentials in `.env.local`:
+
+```bash
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=you@gmail.com
+SMTP_PASS=your-16-character-app-password
+SMTP_FROM=you@gmail.com   # optional, defaults to SMTP_USER
+```
+
+Any SMTP provider works (Gmail, Outlook, SendGrid, Mailgun, Resend, etc).
+For Gmail specifically, you must generate an **App Password** (Google
+Account → Security → 2-Step Verification → App passwords) — your normal
+Gmail password will not work here. Without valid SMTP credentials, the
+"Send verification code" step will return an error explaining what's
+missing.
 
 You need a Postgres database for `DATABASE_URL` — either a local Postgres
 install, or (recommended, since it's free and works from anywhere) a hosted
