@@ -1,10 +1,9 @@
 # Sustainable Harvest Solutions — Full-Stack App
 
-A live Next.js app built on top of the original **UCS310 DBMS coursework**
-(`sustainable-harvest-solutions-dbms.zip`). The MySQL schema, functions,
-procedures, cursors and triggers from that project have been converted to
-PostgreSQL and wired up behind a real login + dashboard, ready to deploy on
-Vercel.
+A full-stack Next.js app that matches crop breeds to climate zones for
+farmers, with fertilizer/herbicide cost lookups and market pricing. The
+PostgreSQL schema uses functions, procedures, cursors and triggers, and is
+wired up behind a real login + dashboard, ready to deploy on Vercel.
 
 ## What's in here
 
@@ -97,8 +96,8 @@ a one-click Vercel integration.
    - `SESSION_SECRET` — any long random string (`openssl rand -base64 32`).
 6. **Deploy.** Vercel builds and gives you a `*.vercel.app` URL.
 
-That's it — the same schema, functions, procedures, and triggers from the
-original coursework are now backing a real deployed site.
+That's it — the schema, functions, procedures, and triggers are now backing
+a real deployed site.
 
 ## 3. Project structure
 
@@ -115,15 +114,9 @@ src/
 
 ## 4. Notes / known simplifications
 
-- Every logged-in farmer can currently update market prices — the original
-  project didn't define separate admin vs. farmer roles, so this mirrors
-  that. Add a `role` column + a check in `/api/market/update` if you want
-  to restrict it.
-- `login.user_id` was re-seeded to match `user_farmer.user_id` (`1`, `2`,
-  `3`) — in the original report's sample data the two tables used
-  different id schemes (`bikram`/`aditya` vs. `1`/`2`/`3`) and never
-  actually joined.
-- See the original `sustainable-harvest-solutions-dbms/README.md` for the
-  list of bugs fixed in the SQL itself (missing `COST` column, cursor
-  logic bug, missing history tables, etc.) — all of those fixes carried
-  over into `db/schema.sql`.
+- Every logged-in farmer can currently update market prices — there's no
+  separate admin vs. farmer role yet. Add a `role` column + a check in
+  `/api/market/update` if you want to restrict it.
+- `login.user_id` matches `user_farmer.user_id` (`1`, `2`, `3` for the
+  seeded demo farmers) so a logged-in user always maps to a real farmer
+  profile.

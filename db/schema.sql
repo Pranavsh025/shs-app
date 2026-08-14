@@ -1,19 +1,12 @@
 -- ============================================================
 -- Sustainable Harvest Solutions - PostgreSQL Schema
--- Converted from the original MySQL/MariaDB DBMS coursework
--- (sql/01-05 in the uploaded project) so it can run on a
--- Vercel-friendly Postgres host (Neon / Vercel Postgres / Supabase).
+-- Runs on any Postgres host (Neon / Vercel Postgres / Supabase).
 --
--- Changes from the original MySQL version:
---  - DELIMITER blocks removed (not a Postgres concept)
---  - Functions/Procedures rewritten in PL/pgSQL
---  - herbs.PRICE and herbs.LAND_AMOUNT/QUANTITY are NUMERIC instead
---    of VARCHAR (the original stored numbers as text)
---  - SIGNAL SQLSTATE '45000' -> RAISE EXCEPTION
---  - login.USER_ID re-seeded to match user_farmer.USER_ID (see
---    seed.mjs) because in the original report the login table used
---    names ('bikram','aditya') while user_farmer used numeric ids
---    ('1','2','3') - they never actually joined.
+-- Notes:
+--  - Functions/Procedures are written in PL/pgSQL.
+--  - herbs.PRICE and herbs.LAND_AMOUNT/QUANTITY are NUMERIC.
+--  - login.USER_ID matches user_farmer.USER_ID so a logged-in user
+--    always maps to a real farmer profile (see seed.mjs).
 -- ============================================================
 
 -- 1) login
@@ -204,9 +197,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Cursor-based variant of the fertilizer cost function (kept to mirror
--- the original coursework's cursor exercise; equivalent to the SUM()
--- version above but iterates row by row).
+-- Cursor-based variant of the fertilizer cost function (equivalent to
+-- the SUM() version above but iterates row by row).
 CREATE OR REPLACE FUNCTION get_total_fertilizer_cost_cursor(p_breed_id VARCHAR)
 RETURNS NUMERIC AS $$
 DECLARE

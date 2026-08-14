@@ -1,11 +1,8 @@
-// Seeds the database with the sample data from the original coursework.
+// Seeds the database with sample demo data.
 // Run with: npm run db:seed   (needs DATABASE_URL in .env.local)
 //
-// NOTE: the original report's `login` table used USER_ID values like
-// 'bikram'/'aditya' while `user_farmer` used numeric ids '1'/'2'/'3' -
-// they never actually referenced each other. Here login.user_id is
-// re-seeded to match user_farmer.user_id so a logged-in user maps to
-// a real farmer profile. Demo passwords are shown in the README.
+// NOTE: login.user_id matches user_farmer.user_id so a logged-in user
+// maps to a real farmer profile. Demo passwords are shown in the README.
 
 import "dotenv/config";
 import pg from "pg";
